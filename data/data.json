@@ -1,0 +1,5 @@
+[
+  {"user_id": 1, "user_name": "George", "event_type": "click"},
+  {"user_id": 2, "user_name": "Alice", "event_type": "view"},
+  {"user_id": 3, "user_name": "Bob", "event_type": "click"}
+]
