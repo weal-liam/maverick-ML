@@ -32,6 +32,10 @@ def data_analysis_step(df: pd.DataFrame, target: str, desired_cols: list, undesi
     logging.info("Feature type analysis...")
     cat_cols, num_cols = analyser.inspect(df)
 
-    final_analysis = deep_analysis(general_stats, missing_vals, target, cat_cols, num_cols)
+    linear_relations = df.drop([*cat_cols], axis=1).corr(method="pearson")[target].to_dict() if target not in cat_cols else df.drop([*cat_cols], axis=1).corr(method="pearson").to_dict()
+
+    skewness = df.drop(columns=cat_cols).skew().to_dict()
+
+    final_analysis = deep_analysis(general_stats, missing_vals, linear_relations, skewness, target, cat_cols, num_cols)
 
     return final_analysis , None, cat_cols, num_cols, df

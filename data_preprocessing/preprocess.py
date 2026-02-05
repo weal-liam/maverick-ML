@@ -12,7 +12,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 
 @step
-def preprocess_data(df : pd.DataFrame, target:str, analysis, cat_cols: list, num_cols: list) -> Tuple[Annotated[pd.DataFrame, "X_train"], Annotated[pd.DataFrame, "X_test"], Annotated[pd.Series, "y_train"], Annotated[pd.Series, "y_test"], Annotated[ColumnTransformer, "preprocessor"]]:     
+def preprocess_data(df : pd.DataFrame, target:str, analysis, cat_cols: list, num_cols: list, preferred_cat:str) -> Tuple[Annotated[pd.DataFrame, "X_train"], Annotated[pd.DataFrame, "X_test"], Annotated[pd.Series, "y_train"], Annotated[pd.Series, "y_test"], Annotated[ColumnTransformer, "preprocessor"]]:     
     """
     Preprocess data step
     ====================================
@@ -50,11 +50,11 @@ def preprocess_data(df : pd.DataFrame, target:str, analysis, cat_cols: list, num
     y = df[target]
 
     #Target Preprocess, checks whether any analysis suggestion were given for the target
-    target_analysis = analysis["analysis"]["target_suggestion"]
+    #target_analysis = analysis["analysis"]["target_suggestion"]
 
-    #logarithmic transformation
-    if target_analysis == 'log-transform':
-        y = np.log1p(y)
+    #Binary transformation
+    if str(y.dtype) == 'object':
+       y = (y == preferred_cat).astype(int)
 
     #Remove Target from these columns to avoid future pipeline errors
     if target in cat_cols:

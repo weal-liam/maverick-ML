@@ -61,7 +61,8 @@ class FeatureTypeIdentifierAnalysisStrategy(AnalysisStrategy):
     
         for col in df.columns:
             if str(df[col].dtype) == 'object' or 2 <= df[col].nunique() <= 23:
-                categorical_cols.append(col) 
+                if col not in ['hour', 'day', 'month']:
+                    categorical_cols.append(col) 
             else:
                 numerical_cols.append(col)
 

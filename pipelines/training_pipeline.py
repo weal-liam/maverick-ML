@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Optional
 from zenml import pipeline
 from data_analysis.cross_val import cross_validation_step
 from data_models.model_train import get_model, train_model, register_model
@@ -8,12 +8,12 @@ from steps.data_injestion_step import data_injestion_step
 from data_model_evaluation.model_evaluate import evaluate_model
 
 @pipeline(enable_cache=False)
-def training_pipeline(model_name: str, source: str, target:str, desired_cols: list, undesired_cols: list):
+def training_pipeline(model_name: str, source: str, target:str, desired_cols: list, undesired_cols: Optional[list] = None, preferred_cat: Optional[str] = None):
     df = data_injestion_step(source=source)
 
     analysis_1, analysis_2, cat_cols, num_cols, df_new = data_analysis_step(df, target, desired_cols, undesired_cols)
 
-    X_train, X_test, y_train, y_test, preprocessor = preprocess_data(df_new, target, analysis_1,cat_cols, num_cols)
+    X_train, X_test, y_train, y_test, preprocessor = preprocess_data(df_new, target, analysis_1,cat_cols, num_cols, preferred_cat)
 
     model = cross_validation_step(analysis_1, preprocessor)
 

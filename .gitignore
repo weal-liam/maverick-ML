@@ -3,3 +3,4 @@ venv/
 mlflow.db
 mlruns/
 __pycache__/
+extracted_data/
